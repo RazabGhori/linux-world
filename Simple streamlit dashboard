@@ -1,0 +1,32 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Title
+st.title("Simple Streamlit Dashboard")
+
+# Upload CSV file
+st.sidebar.header("Upload CSV")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type="csv")
+
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+    st.subheader("Data Preview")
+    st.dataframe(df.head())
+
+    # Select column for plotting
+    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    st.subheader("Column Selection for Plotting")
+    column_to_plot = st.selectbox("Select a numeric column", numeric_columns)
+
+    # Plot histogram
+    st.subheader(f"Histogram of {column_to_plot}")
+    fig, ax = plt.subplots()
+    ax.hist(df[column_to_plot], bins=20, color='skyblue', edgecolor='black')
+    st.pyplot(fig)
+
+    # Show summary statistics
+    st.subheader("Summary Statistics")
+    st.write(df.describe())
+else:
+    st.info("Please upload a CSV file to see the dashboard.")
