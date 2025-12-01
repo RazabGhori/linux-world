@@ -1,0 +1,33 @@
+import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+PHONE_ID = os.getenv("WHATSAPP_PHONE_ID")
+TOKEN = os.getenv("WHATSAPP_TOKEN")
+TO = os.getenv("RECIPIENT_PHONE")  # e.g. +919876543210
+
+if not PHONE_ID or not TOKEN or not TO:
+    raise SystemExit("Set WHATSAPP_PHONE_ID, WHATSAPP_TOKEN, RECIPIENT_PHONE in .env")
+
+API = f"https://graph.facebook.com/v17.0/{PHONE_ID}/messages"  # version may change
+
+def send_text(message):
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": TO,
+        "type": "text",
+        "text": {"body": message}
+    }
+    r = requests.post(API, headers=headers, json=payload)
+    r.raise_for_status()
+    return r.json()
+
+if _name_ == "_main_":
+    resp = send_text("Hello from WhatsApp Cloud API — automated with Python!")
+    print("Response:", resp)
