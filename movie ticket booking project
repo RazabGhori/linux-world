@@ -1,0 +1,50 @@
+# Movie Ticket Booking System in Python
+
+movie_name = "Avengers: Endgame"
+rows = 5
+cols = 5
+seats = [["O" for _ in range(cols)] for _ in range(rows)]  # O = available, X = booked
+
+def display_seats():
+    print("\nSeats Layout (O = available, X = booked):")
+    print("  " + " ".join(str(i+1) for i in range(cols)))
+    for idx, row in enumerate(seats):
+        print(chr(65 + idx) + " " + " ".join(row))
+
+def book_ticket():
+    display_seats()
+    seat_input = input("Enter seat to book (e.g., A1, B3): ").upper()
+    row_char, col_num = seat_input[0], seat_input[1:]
+    row = ord(row_char) - 65
+    col = int(col_num) - 1
+
+    if 0 <= row < rows and 0 <= col < cols:
+        if seats[row][col] == "O":
+            seats[row][col] = "X"
+            print(f"Ticket booked successfully for seat {seat_input}!")
+        else:
+            print("Sorry, seat already booked.")
+    else:
+        print("Invalid seat selection.")
+
+def main():
+    print(f"Welcome to {movie_name} Ticket Booking System")
+    while True:
+        print("\nMenu:")
+        print("1. Show Seats")
+        print("2. Book Ticket")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            display_seats()
+        elif choice == "2":
+            book_ticket()
+        elif choice == "3":
+            print("Thank you for using the Ticket Booking System!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
